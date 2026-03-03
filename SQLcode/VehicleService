@@ -1,0 +1,113 @@
+USE [DSTraining]
+GO
+/****** Object:  StoredProcedure [dbo].[__tmpl__BLD_WRK_VehicleService]    Script Date: 03.03.2026 11:26:29 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[__tmpl__BLD_WRK_VehicleService]
+
+-- =============================================
+-- Author:		
+-- Create date: 
+-- Description:	RAW --> WRK
+-- MOD DATE:
+-- =============================================
+
+
+
+
+-- =============================================
+-- CREATE TABLE BLOCK
+-- =============================================
+AS
+BEGIN
+	CREATE TABLE [WRK_VehicleService]
+(
+ [RowNumber]        INT IDENTITY (1,1)
+,[CustomerID]       VARCHAR(100)
+,[CustomerSince]    Date
+,[Vehicle]          VARCHAR(100)
+,[2014]             FLOAT
+,[2015]             FLOAT
+,[2016E]            FLOAT
+)
+
+ -- =============================================
+-- TRUNCATE TABLE
+-- =============================================
+
+TRUNCATE TABLE [WRK_VehicleService]
+
+
+-- =============================================
+-- INSERT INTO BLOCK
+-- =============================================
+
+INSERT INTO [WRK_VehicleService]
+
+(
+           
+       [CustomerID]
+      ,[CustomerSince]
+      ,[Vehicle]
+      ,[2014]
+      ,[2015]
+      ,[2016E]
+    )
+SELECT 
+             
+       [CustomerID]
+      ,[CustomerSince]
+      ,[Vehicle]
+      ,[2014]
+      ,[2015]
+      ,[2016E]
+FROM [RAW_VehicleService_20260219]
+
+ 
+--Exclusions
+  Where ISNUMERIC ([2015]) = 1
+  OR [2015] = '' ;
+
+
+-- (1049993 ROWS AFFECTED)
+END
+
+-- ADDITIONAL CHECKS
+SELECT [CustomerID],count(*)
+FROm [WRK_VehicleService]
+group by [CustomerId]
+Having Count(*) > 1
+
+SELECT *
+from [WRK_VehicleService] 
+where [CustomerID] like '3490750'
+
+
+Select * 
+from [WRK_VehicleService] 
+Where CustomerSince < '1965-01-01'
+
+Select max([2014])
+from [WRK_VehicleService]
+Where [2014] > 10000
+
+select sum([2016E])
+from [WRK_VehicleService]
+
+/*
+EXCLUDED ROW:
+  SELECT *
+  FROM [DSTraining].[dbo].[RAW_VehicleService_20260219]
+  Where ISNUMERIC ([2015]) = 0
+  AND [2015] <> '' ;
+*/
+
+/*
+SELECT *
+FROM [WRK_VehicleService]
+
+SELECT * FROM [dbo].[RAW_VehicleService]
+*/
